@@ -33,19 +33,12 @@ resource "aws_security_group" "twoge-tf-private-sg" {
   description = "Security group for the private subnet"
   vpc_id = aws_vpc.twoge-tf-vpc.id
 
-  # Allow inbound traffic from the public subnet
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "tcp"
-    security_groups = [aws_security_group.twoge-tf-public-sg.id]
-  }
-
+    #All inbound traffic on 3306 from public server
     ingress {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]
+    security_groups = [aws_security_group.twoge-tf-public-sg.id] 
   }
 
   # Allow all outbound traffic
