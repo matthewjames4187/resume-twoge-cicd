@@ -82,4 +82,4 @@
     environment:
       DATABASE_URL: "postgresql://{{ rds_username }}:{{ rds_password }}@{{ rds_endpoint }}:{{ rds_port }}/{{ rds_db_name }}"
     args:
-      chdir: /path/to/your/app/directory
+      chdir: ./twoge/app.py
