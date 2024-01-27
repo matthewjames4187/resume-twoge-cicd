@@ -1,5 +1,5 @@
 # Twoge Two-Tier Deployment
-## Want to Know How to Build It? Check Here: [Coming Soon]
+Want to Know How to Build It? Check Here: [Coming Soon]
 
 [Link Twoge](https://github.com/chandradeoarya/twoge/tree/master) Deployed on Ubuntu EC2 Server + RDS PosgreSQL using IaC (Terraform/Ansible)
 
