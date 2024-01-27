@@ -1,2 +1,3 @@
 *.log
 *.tfvars
+roles-secret.yml
