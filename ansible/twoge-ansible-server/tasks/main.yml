@@ -1,0 +1,85 @@
+---
+# tasks file for resume-twoge-ansible
+# get environmental variables
+  - name: Retrieve Terraform Outputs
+    shell: terraform output -json
+    register: terraform_outputs
+
+  - name: Parse Outputs
+    set_fact:
+      rds_endpoint: "{{ terraform_outputs.stdout | from_json | json_query('rds_endpoint') }}"
+      rds_username: "{{ terraform_outputs.stdout | from_json | json_query('rds_username') }}"
+      rds_password: "{{ terraform_outputs.stdout | from_json | json_query('rds_password') }}"
+      rds_port: "{{ terraform_outputs.stdout | from_json | json_query('rds_port') }}"
+      rds_db_name: "{{ terraform_outputs.stdout | from_json | json_query('rds_db_name') }}"
+
+# basic update
+  - name: Update APT packages
+    apt:
+      update_cache: yes
+      become: true
+
+# nginx install
+  - name: Install Nginx
+    apt:
+      name: nginx
+      state: present
+    update_cache: yes
+
+  - name: Copy Nginx configuration for Twoge
+    template:
+      src: "{{ playbook_dir }}../files/twoge.conf"
+      dest: /etc/nginx/sites-available/twoge.conf
+    notify:
+    - restart nginx
+
+  - name: Enable Twoge site
+    file:
+      src: /etc/nginx/sites-available/twoge.conf
+      dest: /etc/nginx/sites-enabled/twoge.conf
+      state: link
+    notify:
+    - restart nginx
+
+  - name: Remove default Nginx site
+    file:
+      path: /etc/nginx/sites-enabled/default
+      state: absent
+    notify:
+    - restart nginx
+
+#backend install
+  - name: Install Python3 and pip
+    apt:
+      name:
+        - python3
+        - python3-pip
+      state: present
+      become: true
+
+  - name: Copy twoge directory to endpoint
+    ansible.builtin.copy:
+      src: "{{ playbook_dir }}/../../twoge/"
+      dest: .
+
+  - name: Create a Python virtual environment
+    command: python3 -m venv ./twoge/venv
+    become: true
+
+  - name: Activate the virtual environment
+    command: source ./twoge/venv/bin/activate
+    become: true
+
+  - name: Install Python requirements
+    pip:
+      requirements: ./twoge/requirements.txt
+      become: true
+
+#initialize app
+  - name: Run app.py
+    command: python3 ./twoge/app.py
+    become: true
+    environment:
+      DATABASE_URL: "postgresql://{{ rds_username }}:{{ rds_password }}@{{ rds_endpoint }}:{{ rds_port }}/{{ rds_db_name }}"
+    args:
+      chdir: /path/to/your/app/directory

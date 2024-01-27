@@ -5,6 +5,10 @@ on:
     branches:
       - dev
 
+env:
+    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -25,3 +29,9 @@ jobs:
           file: #./backend/Dockerfile
           push: true
           tags: matthewjames4187/dev-twoge-server:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Check out the repo
+          uses: actions/checkout@v2
