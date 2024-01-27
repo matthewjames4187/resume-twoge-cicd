@@ -1,7 +1,7 @@
 # Twoge Two-Tier Deployment
 Want to Know How to Build It? Check Here: [Coming Soon]
 
-[Link Twoge](https://github.com/chandradeoarya/twoge/tree/master) Deployed on Ubuntu EC2 Server + RDS PosgreSQL using IaC (Terraform/Ansible)
+[Twoge](https://github.com/chandradeoarya/twoge/tree/master) Deployed on Ubuntu EC2 Server + RDS PosgreSQL using IaC (Terraform/Ansible)
 
 ## Table of Contents
 
@@ -26,11 +26,11 @@ Ansible Provides:
 
 ## Prerequisites
 
-- [Link Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
-- [Link Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
-- [Link AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-- [Link Boto3](https://pypi.org/project/boto3/)
-- [Link Botocore](https://pypi.org/project/botocore/)
+- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+- [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [Boto3](https://pypi.org/project/boto3/)
+- [Botocore](https://pypi.org/project/botocore/)
 
 
 ## Getting Started
