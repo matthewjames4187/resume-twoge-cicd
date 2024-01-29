@@ -1,0 +1,10 @@
+---
+- hosts: all 
+  become: true
+  roles:
+    - twoge-ansible-server
+  vars_files:
+    - roles-secret.yml
+  vars:
+    ansible_user: "ubuntu"
+    ansible_ssh_private_key_file: "location of your pem key"

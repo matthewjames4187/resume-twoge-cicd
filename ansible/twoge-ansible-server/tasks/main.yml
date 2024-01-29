@@ -60,7 +60,7 @@
   - name: Copy twoge directory to endpoint
     ansible.builtin.copy:
       src: "{{ playbook_dir }}/../../twoge/"
-      dest: .
+      dest: ./twoge/
 
   - name: Create a Python virtual environment
     command: python3 -m venv ./twoge/venv

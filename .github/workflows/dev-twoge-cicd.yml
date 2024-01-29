@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: Dev Twoge Server CICD Pipeline
 
 on:
   push:
@@ -6,10 +6,11 @@ on:
       - dev
 
 env:
-    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
+  # creates an image and pushes it to dockerhub for future development of dockerized solutions
   build-and-push:
     runs-on: ubuntu-latest
     steps:
@@ -25,13 +26,32 @@ jobs:
       - name: Build and push Dev Twoge Server Docker image
         uses: docker/build-push-action@v2
         with:
-          context: #./backend
-          file: #./backend/Dockerfile
+          context: ./twoge
+          file: ./twoge/Dockerfile
           push: true
           tags: matthewjames4187/dev-twoge-server:latest
 
+  # deploys updates from the repo twoge folder to the ec2 instance and restarts the relevant services
   deploy:
     runs-on: ubuntu-latest
     steps:
-        - name: Check out the repo
-          uses: actions/checkout@v2
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Create PEM key file
+        run: |
+          echo "${{ secrets.EC2_PRIVATE_KEY }}" > /tmp/ec2_private_key.pem
+          chmod 600 /tmp/ec2_private_key.pem
+
+      - name: Copy the twoge directory to EC2
+        run: |
+          scp -i /tmp/ec2_private_key.pem -r twoge/ ubuntu@${{ secrets.SERVER_IP }}:./twoge/
+        continue-on-error: true
+
+      - name: Restart your application
+        run: |
+          ssh -i /tmp/ec2_private_key.pem ubuntu@${{ secrets.SERVER_IP }} "sudo systemctl restart twoge.service"
+
+      - name: Restart Nginx
+        run: |
+          ssh -i /tmp/ec2_private_key.pem ubuntu@${{ secrets.SERVER_IP }} "sudo systemctl restart nginx"

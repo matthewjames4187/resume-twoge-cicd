@@ -35,4 +35,48 @@ Ansible Provides:
 
 ## Getting Started
 
-[Coming Soon]
+### Initialization
+From Terraform/Ansible Controller
+
+```bash
+#Initialize Terraform
+terraform init
+
+#Plan Terraform Deployment
+terraform plan
+
+#Apply Terraform Deplyment
+terraform apply
+
+#Save Terraform Outputs
+terraform output -json > terraform_outputs.json
+
+#Generate NGINX Config
+python /twoge/gen_nginx.conf.py > /ansible/twoge-ansible-server/files/twoge.conf
+
+
+#Run Ansible Playbook
+ansible-playbook -i server_aws_ec2.yml server_role.yml
+```
+
+### CICD
+
+```bash
+#Change to the resume-twoge-cicd repo
+cd to resume-twoge-cicd
+
+#Add changes
+git add .
+
+#Switch to dev branch
+git checkout dev
+
+#Commit changes
+git commit -m "These are my changes"
+
+#Push Changes
+git push origin dev
+```
+
+On push to dev branch, the twoge/ directory changes should be updated on the initialized AWS EC2 Server.
+
